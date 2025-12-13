@@ -6,7 +6,7 @@ export class GameCard {
         const displayName = normalizedName
             ? normalizedName[0].toUpperCase() + normalizedName.slice(1)
             : "";
-        const imgSrc = `Resources/${normalizedName}.webp`;
+        const imgSrc = `static/Resources/${normalizedName}.webp`;
 
         this.container = document.createElement("div");
         this.container.classList.add("im_game_card_container_tmp","im_game_card_container");

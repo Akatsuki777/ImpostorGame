@@ -66,7 +66,7 @@ export function makeGameScreen(secret){
     changeImpostorUI(secret === 'impostor');
 
     //Set other one time values
-    messageButton = new NotificationButton('Resources/message_icon.webp');
+    messageButton = new NotificationButton('static/Resources/message_icon.webp');
     messageButton.setNotification(false);
 
     gameButton.parentNode.insertBefore(messageButton,gameButton);

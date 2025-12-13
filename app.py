@@ -10,7 +10,7 @@ import os
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 app.permanent_session_lifetime = timedelta(minutes=15)
 socketio = SocketIO(app,cors_allowed_origins="*",manage_session=False)
@@ -20,6 +20,10 @@ with open("game/secretWordList",'r') as f:
 
 rooms = {}
 room_members = {}
+
+@app.route("/")
+def index():
+    return app.send_static_file('index.html')
 
 @app.post("/register")
 def register():
