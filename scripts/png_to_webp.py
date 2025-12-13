@@ -10,8 +10,6 @@ def convert_pngs_to_webp(input_dir: Path, output_dir: Path, quality: int):
         webp_path = output_dir / (png_path.stem + ".webp")
 
         with Image.open(png_path) as img:
-            if img.mode in ("RGBA", "P"):
-                img = img.convert("RGB")
 
             img.save(
                 webp_path,
