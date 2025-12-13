@@ -19,9 +19,9 @@ class Toast {
         this.toastParent = document.createElement("div");
 
         this.alert_type = {
-            "0": ["toast_success", "Resources/Toast/success.svg"],
-            "1": ["toast_error", "Resources/Toast/alert.svg"],
-            "2": ["toast_info", "Resources/Toast/info.svg"]
+            "0": ["toast_success", "static/Resources/Toast/success.svg"],
+            "1": ["toast_error", "static/Resources/Toast/alert.svg"],
+            "2": ["toast_info", "static/Resources/Toast/info.svg"]
         };
 
         this.makeToast();
