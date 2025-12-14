@@ -24,6 +24,7 @@ impostor/
 # Editor settings
 .vscode/
 .idea/
+.VSCodeCounter
 
 # Local SQLite databases (keep production data private)
 *.db
