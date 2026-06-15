@@ -193,6 +193,11 @@ def join_socket(data):
 
     join_room(room_id)
 
+    #Remove stale ports
+    for sid,pid in list(room_members[room_id].items()):
+        if(pid == player_index):
+            room_members[room_id].pop(sid)
+
     room_members[room_id][request.sid] = player_index
 
     emit(
@@ -202,6 +207,11 @@ def join_socket(data):
         }
         , to=room_id
         )
+
+@socketio.on("disconnect")
+def disconnect_socket():
+    for members in room_members.values():
+        members.pop(request.sid, None)
 
 @socketio.on('start_game')
 def start_game(data):

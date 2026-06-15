@@ -1,4 +1,4 @@
-import { socket } from "../plugins/sockets.js";
+import { setActiveSocketRoom, socket } from "../plugins/sockets.js";
 import { TEMPLATES } from "../stage_management/elementsBuilder.js";
 import { createHTML } from "../stage_management/helpers.js";
 import { ROOM_ID, USERNAME, PLAYER_COLORS,setPlayers } from "./gameManagement.js";
@@ -138,10 +138,7 @@ export async function joinRoom(room_id) {
 }
 
 export function joinSocketRoom(room_id,playerIndex){
-    socket.emit("join_socket_room", {
-            room_id: room_id,
-            player_index: playerIndex
-    });
+    setActiveSocketRoom(room_id, playerIndex);
 }
 
 export function updatePlayersInLobby(players){
