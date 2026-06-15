@@ -277,6 +277,7 @@ def submit_vote(data):
             },
                 to=room_id
             )
+        room.is_active_voting=False
 
 @socketio.on("guess_word")
 def guess_word_event(data):
@@ -336,6 +337,13 @@ def initiate_voting(data):
     room = rooms[room_id]
     impostor = room.player_roles.index(True)
 
+    if room.is_active_voting:
+        for sid, pid in room_members[room_id].items():
+            if (player_id == pid):
+                emit("active_voting_error",{"message":"There is an active voting going on!"},to=sid)
+                return
+    
+    room.is_active_voting=True
 
     if not hasattr(room, "votes"):
         room.votes = {}
@@ -350,6 +358,9 @@ def initiate_voting(data):
 
     for sid, pid in room_members[room_id].items():
         if pid == impostor:
+            continue
+
+        if pid == player_id:
             continue
 
         emit(
@@ -402,6 +413,7 @@ def respond_vote_request(data):
                 )
         else:
             emit("vote_initiation_failed",{},to=room_id)
+            room.is_active_voting = False
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ class GameRoom:
         self.current_secret = 0
         self.prev_secrets = []
         self.chats = []
+        self.is_active_voting = False
 
     def addPlayer(self,playerName):
         self.player_count += 1

@@ -155,6 +155,9 @@ export async function linkSockets(){
         loadNextGame();
     });
 
+    socket.on("active_voting_error",data=>{
+        new Toast('1',data.message,1,document.body);
+    })
 }
 
 async function performAction(){
