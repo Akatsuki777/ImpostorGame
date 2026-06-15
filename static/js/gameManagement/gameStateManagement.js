@@ -3,6 +3,8 @@ import { TEMPLATES } from "../stage_management/elementsBuilder.js";
 import { createHTML } from "../stage_management/helpers.js";
 import { ROOM_ID, USERNAME, PLAYER_COLORS,setPlayers } from "./gameManagement.js";
 
+const ACTIVE_ROOM_STORAGE_KEY = "impostor_active_room_id";
+
 export async function getPlayers(){
 
     const res = await fetch(`/room_info/${ROOM_ID}`);
@@ -17,6 +19,66 @@ export async function getPlayers(){
         setPlayers(data.players);
     });
 
+}
+
+export function getActiveRoomId(){
+    return sessionStorage.getItem(ACTIVE_ROOM_STORAGE_KEY);
+}
+
+export function saveActiveRoom(room_id){
+    sessionStorage.setItem(ACTIVE_ROOM_STORAGE_KEY, room_id);
+}
+
+export function clearActiveRoom(){
+    sessionStorage.removeItem(ACTIVE_ROOM_STORAGE_KEY);
+}
+
+export async function getRoomInfo(room_id){
+    try {
+        const res = await fetch(`/room_info/${room_id}`, {
+            credentials: "include"
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            return { success: false, error: data.error };
+        }
+
+        return {
+            success: true,
+            room_id: data.room_id,
+            player_index: data.player_index,
+            is_owner: data.is_owner,
+            game_started: data.game_started,
+            score: data.score,
+            secret: data.secret,
+            players: data.players
+        };
+    } catch (err) {
+        console.error("Error restoring room:", err);
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function getCurrentRooms(){
+    try {
+        const res = await fetch("/current_rooms", {
+            credentials: "include"
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            return { success: false, error: data.error };
+        }
+
+        return {
+            success: true,
+            rooms: data.rooms
+        };
+    } catch (err) {
+        console.error("Error loading rooms:", err);
+        return { success: false, error: "Network error" };
+    }
 }
 
 export async function createRoom(){

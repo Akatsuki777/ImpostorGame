@@ -72,6 +72,33 @@ def logout():
     session.clear()
     return jsonify({"success": True})
 
+def get_player_index(room, player_name):
+    try:
+        return room.player_name.index(player_name)
+    except ValueError:
+        return None
+
+def get_secret_for_player(room, player_index):
+    if not room.game_started or room.current_secret == 0:
+        return None
+
+    if room.player_roles[player_index]:
+        return "impostor"
+
+    return wordList[str(room.current_secret)]
+
+def room_payload(room_id, room, player_index):
+    return {
+        "room_id": room_id,
+        "player_count": room.player_count,
+        "players": room.player_name,
+        "player_index": player_index,
+        "is_owner": player_index == 0,
+        "game_started": room.game_started,
+        "score": room.scores[player_index],
+        "secret": get_secret_for_player(room, player_index)
+    }
+
 @app.post("/create_room")
 def create_room():
     if "username" not in session:
@@ -98,25 +125,48 @@ def http_join_room():
         return jsonify({"success": False, "error": "404"}), 404
     
     room = rooms[room_id]
-    room.addPlayer(player_name)
-    player_index = room.player_count - 1
+    player_index = get_player_index(room, player_name)
+
+    if player_index is None:
+        room.addPlayer(player_name)
+        player_index = room.player_count - 1
     
     
     return jsonify({"success": True, "player_index": player_index})
 
 @app.get("/room_info/<room_id>")
 def room_info(room_id):
+    if "username" not in session:
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
 
     if room_id not in rooms:
         return jsonify({"success": False, "error": "Room does not exist"}), 404
 
     room = rooms[room_id]
-    return jsonify({
-        "success": True,
-        "room_id": room_id,
-        "player_count": room.player_count,
-        "players": room.player_name
-    })
+    player_index = get_player_index(room, session["username"])
+
+    if player_index is None:
+        return jsonify({"success": False, "error": "Not a room member"}), 403
+
+    payload = room_payload(room_id, room, player_index)
+    payload["success"] = True
+    return jsonify(payload)
+
+@app.get("/current_rooms")
+def current_rooms():
+    if "username" not in session:
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
+
+    username = session["username"]
+    joined_rooms = []
+
+    for room_id, room in rooms.items():
+        player_index = get_player_index(room, username)
+
+        if player_index is not None:
+            joined_rooms.append(room_payload(room_id, room, player_index))
+
+    return jsonify({"success": True, "rooms": joined_rooms})
 
 @socketio.on("join_socket_room")
 def join_socket(data):
@@ -127,11 +177,24 @@ def join_socket(data):
     room_id = data["room_id"]
     player_index = data["player_index"]
 
+    if room_id not in rooms:
+        emit("error", {"message": "Room does not exist"})
+        return
+
+    room = rooms[room_id]
+    username = session["username"]
+    expected_player_index = get_player_index(room, username)
+
+    if expected_player_index is None:
+        emit("error", {"message": "Not a room member"})
+        return
+
+    player_index = expected_player_index
+
     join_room(room_id)
 
     room_members[room_id][request.sid] = player_index
 
-    room = rooms[room_id]
     emit(
         "player_list", 
         {
@@ -156,6 +219,7 @@ def start_game(data):
         return
 
     room.startGame(wordList, changeImposter=False)
+    room.game_started = True
 
     impostor = room.player_roles.index(True)
 

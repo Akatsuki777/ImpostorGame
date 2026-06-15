@@ -41,6 +41,10 @@ export function setPlayers(players){
     PLAYERS = players;
 }
 
+export function setGameCount(value){
+    gameCount = value;
+}
+
 export async function startGame(){
 
     socket.on("game_error",data => {

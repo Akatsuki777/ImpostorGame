@@ -1,8 +1,8 @@
 import { isLoggedIn, register, login } from "../static/userManagement.js"; 
-import { buildAuthOption, buildMainMenu, buildHomeScreen, removeAuthOption, buildAuth, buildWaitLobby, buildEnterLobby, removeAuth, removeMainMenu, removeImpostor, removeEnterLobby } from "./elementsBuilder.js";
-import { createRoom, joinRoom, joinSocketRoom} from "../gameManagement/gameStateManagement.js";
+import { buildAuthOption, buildMainMenu, buildHomeScreen, removeAuthOption, buildAuth, buildWaitLobby, buildEnterLobby, removeAuth, removeMainMenu, removeImpostor, removeEnterLobby, removeTopBar } from "./elementsBuilder.js";
+import { createRoom, getActiveRoomId, getCurrentRooms, getRoomInfo, joinRoom, joinSocketRoom, saveActiveRoom} from "../gameManagement/gameStateManagement.js";
 import { connectSocket } from "../plugins/sockets.js";
-import { ROOM_ID,linkSockets, startGame,setUsername,  setRoomId,  setPlayerIndex } from "../gameManagement/gameManagement.js";
+import { ROOM_ID,linkSockets, makeGameScreen, startGame,setUsername,  setRoomId,  setPlayerIndex, setScore, setSecret, setPlayers, setGameCount } from "../gameManagement/gameManagement.js";
 
 export async function loadHome(){
 
@@ -10,13 +10,77 @@ export async function loadHome(){
 
     const user = await isLoggedIn();
 
+    if(user.loggedIn){
+        setUsername(user.username);
+        connectSocket();
+
+        const room = await getRoomToRestore();
+
+        if(room.success){
+            await restoreRoom(room);
+            return;
+        }
+
+        buildMainMenu();
+        document.getElementById("im_start_room").addEventListener("click",handleCreateRoom);
+        document.getElementById("im_join_room").addEventListener("click",handleJoinRoom);
+        return;
+    }
 
     buildAuthOption();
+}
 
-    // if (user.loggedIn){
-    //     buildMainMenu();
-    // } else {
-    // }
+async function getRoomToRestore(){
+    const activeRoomId = getActiveRoomId();
+
+    if(activeRoomId){
+        const room = await getRoomInfo(activeRoomId);
+
+        if(room.success){
+            return room;
+        }
+    }
+
+    const currentRooms = await getCurrentRooms();
+
+    if(currentRooms.success && currentRooms.rooms.length === 1){
+        saveActiveRoom(currentRooms.rooms[0].room_id);
+        return {
+            success: true,
+            ...currentRooms.rooms[0]
+        };
+    }
+
+    return { success: false };
+}
+
+async function restoreRoom(room){
+    setRoomId(room.room_id);
+    setPlayerIndex(room.player_index);
+    setScore(room.score || 0);
+    setPlayers(room.players || []);
+
+    joinSocketRoom(room.room_id, room.player_index);
+    await linkSockets();
+
+    if(room.game_started){
+        setSecret(room.secret);
+        setGameCount(1);
+        removeTopBar();
+        removeImpostor();
+        setTimeout(()=>{
+            makeGameScreen(room.secret);
+        },520);
+        return;
+    }
+
+    removeImpostor();
+    setTimeout(async ()=>{
+        await buildWaitLobby(room.is_owner, room.room_id);
+        if(room.is_owner){
+            document.querySelector("#roomIdButton").addEventListener("click",gameStartHandler);
+        }
+    },520);
 }
 
 
@@ -102,6 +166,7 @@ async function roomJoinHandler(){
     if(res.success){
         setPlayerIndex(res.player_index);
         setRoomId(room_id);
+        saveActiveRoom(room_id);
     } else {
         new Toast("1",`Failed to join room`,2,document.querySelector("body"));
         return;
@@ -124,6 +189,7 @@ async function handleCreateRoom(){
     if(response.success){
         setRoomId(response.room_id);
         setPlayerIndex(0);
+        saveActiveRoom(response.room_id);
     } else {
         new Toast("1",`Failed to create room! Try again.`,2,document.querySelector("body"));
         return;
