@@ -111,6 +111,37 @@ const MODAL_STYLES = `
     align-items: center;
     margin: 20px auto 30px auto;
 }
+
+.im_urm_score{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px auto;
+  height: 30px;
+}
+
+.im_urm_score > div{
+  height: 100%;
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.im_urm_score > div > div{
+  height: 100%;
+  aspect-ratio: 1;
+  background-color: #333;
+  border-radius: 3000px;
+}
+
+.im_urm_score > div > p{
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.im_urm_score > p{
+  font-size: 20px;
+}
 `;
 
 export class ModalObject {
@@ -154,7 +185,11 @@ export class ModalObject {
             const text = arg3 || "";
             this.configureConfirm();
             this.setHeader(title, text);
-        } else {
+        } else if (normalizedType === "scorecard"){
+            const score = arg3 || {};
+            this.configureConfirm();
+            this.setContent(score);
+        }else {
             throw new Error("Unsupported modal type. Use 'poll', 'input', or 'confirm'.");
         }
 
@@ -270,6 +305,29 @@ export class ModalObject {
         return modal;
     }
 
+    createScoreList(color,username,score){
+        const scoreContainer = document.createElement("div");
+        const nameContainer = document.createElement("div");
+        const colorContainer = document.createElement("div");
+        const name = document.createElement("p");
+        const scoreText = document.createElement('p');
+
+        scoreContainer.classList.add("im_urm_score");
+
+        scoreText.textContent = score;
+        name.textContent = username;
+        colorContainer.style.backgroundColor = color;
+
+        scoreContainer.appendChild(nameContainer);
+        scoreContainer.appendChild(scoreText);
+
+        nameContainer.append(colorContainer);
+        nameContainer.append(name);
+
+        return scoreContainer;
+
+    }
+
     createPollOption(option, color, index) {
         const optionContainer = document.createElement("div");
         optionContainer.classList.add("im_room_participant");
@@ -356,6 +414,16 @@ export class ModalObject {
     setHeader(title, text) {
         this.titleEl.textContent = title;
         this.messageParagraph.textContent = text;
+    }
+
+    setContent(scores){
+        this.titleEl.textContent = title;
+        const scoreContainer = this.messageParagraph.parentElement;
+
+        scores.forEach((item)=>{
+            scoreContainer.append(this.createScoreList(item.color,item.name,item.score))
+        });
+        
     }
 
     resetInput() {

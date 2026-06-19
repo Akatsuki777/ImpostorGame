@@ -19,6 +19,15 @@ class GameRoom:
         self.player_roles.append(False)
         self.scores.append(0)
 
+    def get_scores(self):
+        score_dict = {}
+        
+        if len(self.prev_secrets)>0:
+            for i in range(0,self.player_count):
+                score_dict[self.player_name[i]] = [self.scores[i],i]
+
+        return score_dict
+
     def startGame(self,wordList,changeImposter=False):
 
         #Create list of previously used secret words

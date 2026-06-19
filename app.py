@@ -425,6 +425,34 @@ def respond_vote_request(data):
             emit("vote_initiation_failed",{},to=room_id)
             room.is_active_voting = False
 
+@socketio.on("close_room")
+def close_room(data):
+
+    if "username" not in session:
+        emit("error",{"message":"Unauthorized User"})
+        return
+
+    player_index = data["player_index"]
+
+    if player_index != 0:
+        emit("error",{
+            "message": "Only room owner can close the room"
+        })
+        return
+
+    room_id = data["room_id"]
+    room = rooms[room_id]
+
+    emit(
+        'close_room',
+        {
+            'message': 'Room closed by owner!',
+            'score': room.get_scores()
+        }
+    )
+
+    rooms.pop(room_id)
+    room_members.pop(room_id)
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=2025)

@@ -1,8 +1,9 @@
-import { buildGameScreen, removeTopBar, removeWaitLobby } from "../stage_management/elementsBuilder.js";
+import { buildGameScreen, removeGameScreen, removeTopBar, removeWaitLobby } from "../stage_management/elementsBuilder.js";
 import { NotificationButton } from "../plugins/notificationButton.js";
 import { GameCard } from "../plugins/GameCard.js";
 import { socket } from "../plugins/sockets.js";
 import modalObject from "../plugins/ModalObject.js";
+import { loadHome } from "../stage_management/stageLoader.js";
 
 export var scoreContainer = null;
 export var impostorContainer = null;
@@ -16,6 +17,7 @@ export var PLAYER_INDEX = null;
 export var SCORE = 0;
 export var SECRET = '';
 export var PLAYERS = [];
+export var curScreen = "";
 
 export function setRoomId(value){
     ROOM_ID = value;
@@ -45,6 +47,10 @@ export function setGameCount(value){
     gameCount = value;
 }
 
+export function setCurScreen(value){
+    curScreen = value;
+}
+
 export async function startGame(){
 
     socket.on("game_error",data => {
@@ -53,6 +59,19 @@ export async function startGame(){
 
     socket.emit("start_game",{
         room_id: ROOM_ID
+    });
+
+}
+
+export async function closeRoom(){
+
+    socket.on("error",data=>{
+        new Toast("1",data.message,1,document.body);
+    })
+
+    socket.emit("close_room",{
+        room_id: ROOM_ID,
+        player_index: PLAYER_INDEX
     });
 
 }
@@ -157,6 +176,26 @@ export async function linkSockets(){
 
     socket.on("active_voting_error",data=>{
         new Toast('1',data.message,1,document.body);
+    })
+
+    socket.on("close_room",async (data) =>{
+        
+        if (curScreen==="lobby"){
+            removeWaitLobby();
+        } else {
+            const score_data = Object.entries(data.scores).map(([name, [score, colorIndex]]) => ({
+                                    name,
+                                    score,
+                                    color: PLAYER_COLORS[colorIndex]
+                                }));
+            await modalObject.show("scorecard",data.scores);
+            removeGameScreen();
+        }
+
+        setTimeout(async ()=>{
+            await loadHome();
+        },500);
+
     })
 }
 

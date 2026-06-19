@@ -2,7 +2,7 @@ import { isLoggedIn, register, login } from "../static/userManagement.js";
 import { buildAuthOption, buildMainMenu, buildHomeScreen, removeAuthOption, buildAuth, buildWaitLobby, buildEnterLobby, removeAuth, removeMainMenu, removeImpostor, removeEnterLobby, removeTopBar } from "./elementsBuilder.js";
 import { createRoom, getActiveRoomId, getCurrentRooms, getRoomInfo, joinRoom, joinSocketRoom, saveActiveRoom} from "../gameManagement/gameStateManagement.js";
 import { connectSocket } from "../plugins/sockets.js";
-import { ROOM_ID,linkSockets, makeGameScreen, startGame,setUsername,  setRoomId,  setPlayerIndex, setScore, setSecret, setPlayers, setGameCount } from "../gameManagement/gameManagement.js";
+import { ROOM_ID,linkSockets, makeGameScreen, startGame,setUsername,  setRoomId,  setPlayerIndex, setScore, setSecret, setPlayers, setGameCount, closeRoom, setCurScreen } from "../gameManagement/gameManagement.js";
 
 export async function loadHome(){
 
@@ -24,6 +24,7 @@ export async function loadHome(){
         buildMainMenu();
         document.getElementById("im_start_room").addEventListener("click",handleCreateRoom);
         document.getElementById("im_join_room").addEventListener("click",handleJoinRoom);
+        setCurScreen("home");
         return;
     }
 
@@ -71,6 +72,7 @@ async function restoreRoom(room){
         setTimeout(()=>{
             makeGameScreen(room.secret);
         },520);
+        setCurScreen("game");
         return;
     }
 
@@ -80,6 +82,7 @@ async function restoreRoom(room){
         if(room.is_owner){
             document.querySelector("#roomIdButton").addEventListener("click",gameStartHandler);
         }
+        setCurScreen("lobby");
     },520);
 }
 
@@ -92,6 +95,7 @@ export function onAuthOptionHandler(isLogin){
         buildAuth(isLogin);
         const button = document.querySelector("#authButton");
         button.addEventListener("click",handleAuth);
+        setCurScreen('auth');
     },520)
 }
 
@@ -121,6 +125,7 @@ async function handleAuth(e){
             buildMainMenu();
             document.getElementById("im_start_room").addEventListener("click",handleCreateRoom);
             document.getElementById("im_join_room").addEventListener("click",handleJoinRoom);
+            setCurScreen("home");
         },500);
 
     } else {
@@ -139,6 +144,7 @@ async function handleAuth(e){
             buildAuth(true);
             const button = document.querySelector("#authButton");
             button.addEventListener("click",handleAuth);
+            setCurScreen("auth");
         },500);
     }
 
@@ -150,6 +156,7 @@ async function handleJoinRoom(){
     setTimeout(()=>{
         buildEnterLobby();
         document.querySelector("#roomIdButton").addEventListener("click",roomJoinHandler);
+        setCurScreen("join_lobby");
     },520);
 }
 
@@ -177,6 +184,7 @@ async function roomJoinHandler(){
         buildWaitLobby(false,ROOM_ID);
         //Link the sockets to handle socket emits
         linkSockets();
+        setCurScreen("lobby");
     },520);
 
 }
@@ -205,6 +213,8 @@ async function handleCreateRoom(){
         //Link the sockets to handle events
         await linkSockets();
         document.querySelector("#roomIdButton").addEventListener("click",gameStartHandler);
+        document.querySelector('#closeRoomButton').addEventListener("click",closeGameHandler);
+        setCurScreen("lobby");
     },520);
 
 }
@@ -213,4 +223,10 @@ async function gameStartHandler(){
 
     const button = document.querySelector("#roomIdButton");
     startGame();
+}
+
+async function closeGameHandler(){
+
+    closeRoom();
+
 }
