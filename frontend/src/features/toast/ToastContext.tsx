@@ -15,27 +15,29 @@ export default function ToastProvider({children}:{children: React.ReactNode}){
 
     const [toasts,setToasts] = useState<ToastItem[]>([]);
 
+
+    const removeToast = useCallback((id: string)=>{
+        setToasts((prev)=>prev.map((toast)=>toast.id===id?{...toast,isLeaving:true}:toast));
+        setTimeout(()=>{
+            setToasts((prev)=>prev.filter((toast)=>toast.id !== id));
+        },100);
+    },[]);
+
     const addToast = useCallback(({toastType='info',message='Sample Message',expirationTime=1}:AddToastProps)=>{
-        
         const Toast : ToastItem = {
             id: crypto.randomUUID(),
             message: message,
             toastType: toastType,
-            expirationTime: expirationTime
+            expirationTime: expirationTime,
+            isLeaving: false
         } 
 
         setToasts((prev)=>[Toast,...prev]);
 
         setTimeout(()=>{
-            setToasts((prev)=>
-                prev.filter((toast)=>toast.id !== Toast.id)
-            )
+            removeToast(Toast.id);
         },expirationTime*1000)
 
-    },[]);
-
-    const removeToast = useCallback((id: string)=>{
-        setToasts((prev)=>prev.filter((toast)=>toast.id !== id));
     },[]);
 
     const clearToasts = useCallback(()=>{

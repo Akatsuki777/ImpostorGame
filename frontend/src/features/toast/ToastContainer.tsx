@@ -22,6 +22,7 @@ export default function ToastContainer({
                     id={toast.id}
                     toastType={toast.toastType}
                     message={toast.message}
+                    className={`${toast.isLeaving?'translate-x-full':'translate-x-0'}`}
                     onRemove={onRemove}
                 ></Toast>
                )) 

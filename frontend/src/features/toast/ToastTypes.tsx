@@ -3,6 +3,7 @@ export type ToastItem = {
     toastType: 'success' | 'error' | 'info'
     message: string
     expirationTime: number 
+    isLeaving: Boolean
 }
 
 export type AddToastProps = {
