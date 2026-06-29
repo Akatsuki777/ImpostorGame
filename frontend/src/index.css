@@ -1,5 +1,17 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Permanent-Marker';
+  src: url('../src/assets/fonts/PermanentMarker-Regular.ttf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme{
+  --font-game: 'Permanent-Marker', sans-serif;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
