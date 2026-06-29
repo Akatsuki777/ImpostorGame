@@ -9,6 +9,7 @@ export const TEMPLATES = {
     roomIdDiv: `<div class="im_room_id_container"><div class="im_room_id_text"><p>ROOM ID</p></div><div class="im_room_id_text grey"><p contenteditable="True">Enter Room ID</p></div></div>`,
     roomIdButton: `<div class="im_button_container"><button id="roomIdButton" class="im_buttons inactive">JOIN ROOM</button></div>`,
     roomWaitButtons: `<div class="im_button_container"><button id="roomIdButton" class="im_buttons inactive">START GAME</button><button id="closeRoomButton" class="im_buttons red">EXIT ROOM</button></div>`,
+    roomWaitGuestButtons: `<div class="im_button_container"><button id="closeRoomButton" class="im_buttons red">EXIT ROOM</button></div>`,
     waitingIcon: `<svg width="800px" height="800px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" class="hds-flight-icon--animation-loading"><g fill="#000000" fill-rule="evenodd" clip-rule="evenodd"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z" opacity=".2"/><path d="M7.25.75A.75.75 0 018 0a8 8 0 018 8 .75.75 0 01-1.5 0A6.5 6.5 0 008 1.5a.75.75 0 01-.75-.75z"/></g></svg>`,
     roomIdList: `<div class="im_room_id_list"></div>`,
     roomIdListItem: `<div class="im_room_participant"><div class="im_color_code"></div><div class="im_room_participant_name"><p></p></div></div>`,
@@ -69,13 +70,13 @@ export function buildEnterLobby(){
 export async function buildWaitLobby(isOwner,room_id){
 
     var templates = [TEMPLATES.roomIdDiv.replace("Enter Room ID",room_id),TEMPLATES.roomIdList];
-    var animArray = [true,false];
-    var animClass = ['impostor_outside_right',null];
+    var animArray = [true,false,true];
+    var animClass = ['impostor_outside_right',null,'fade_in'];
 
     if(isOwner){
         templates.push(TEMPLATES.roomWaitButtons);
-        animArray.push(true);
-        animClass.push('fade_out');
+    } else {
+        templates.push(TEMPLATES.roomWaitGuestButtons);
     }
 
     buildItem(
@@ -138,7 +139,8 @@ export function removeWaitLobby(){
     destroyItem('.im_room_id_container',["imposter_outside"],500);
     destroyItem('.im_button_container',['fade_out'],500);
     destroyItem('.im_room_id_list',['fade_out'],500);
-
+    destroyItem('.im_title_container',['fade_out'],500);
+    destroyItem('.im_topBar',['fade_out'],500);
 }
 
 export function removeGameScreen(){

@@ -6,6 +6,7 @@ import App from './App.tsx'
 import Input from './components/ui/Input.tsx'
 import ToastProvider, { useToast } from './features/toast/ToastContext.tsx'
 import type { AddToastProps } from './features/toast/ToastTypes.tsx'
+import ShapesHeader from './components/ui/ShapesHeader.tsx'
 
 const toastProps: AddToastProps  = {
   toastType: 'success',
@@ -34,6 +35,9 @@ createRoot(document.getElementById('root')!).render(
     <ToastProvider>
       <SampleToastButton />
       <Input className="m-4" placeholder="******" inputType="password"></Input>
+      <div className={`w-110 aspect-[3]`}>
+        <ShapesHeader></ShapesHeader>
+      </div>
       <App />
     </ToastProvider>
   </StrictMode>,

@@ -447,12 +447,36 @@ def close_room(data):
         'close_room',
         {
             'message': 'Room closed by owner!',
-            'score': room.get_scores()
-        }
+            'scores': room.get_scores()
+        },
+        to=room_id
     )
 
     rooms.pop(room_id)
     room_members.pop(room_id)
+
+@socketio.on('exit_room')
+def exit_room(data):
+    
+    if "username" not in session:
+        emit("error",{"message":"Unauthorized access!"})
+
+    room_id = data['room_id']
+    player_index = data['player_index']
+
+    room = rooms[room_id]
+
+    if(len(room.player_name)<4):
+        "message"
+
+    for sid,pid in room_members[room_id].items():
+
+        if pid == player_index:
+            emit("exit_confirmed",{"message":"success"},to=sid)
+        else:
+            emit("player_exited",{
+                "message": f"Player {room.player_name[player_index]} exited the room"
+            })
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=2025)

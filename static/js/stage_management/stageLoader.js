@@ -2,7 +2,7 @@ import { isLoggedIn, register, login } from "../static/userManagement.js";
 import { buildAuthOption, buildMainMenu, buildHomeScreen, removeAuthOption, buildAuth, buildWaitLobby, buildEnterLobby, removeAuth, removeMainMenu, removeImpostor, removeEnterLobby, removeTopBar } from "./elementsBuilder.js";
 import { createRoom, getActiveRoomId, getCurrentRooms, getRoomInfo, joinRoom, joinSocketRoom, saveActiveRoom} from "../gameManagement/gameStateManagement.js";
 import { connectSocket } from "../plugins/sockets.js";
-import { ROOM_ID,linkSockets, makeGameScreen, startGame,setUsername,  setRoomId,  setPlayerIndex, setScore, setSecret, setPlayers, setGameCount, closeRoom, setCurScreen } from "../gameManagement/gameManagement.js";
+import { ROOM_ID,linkSockets, makeGameScreen, startGame,setUsername,  setRoomId,  setPlayerIndex, setScore, setSecret, setPlayers, setGameCount, closeRoom, setCurScreen, exitRoom } from "../gameManagement/gameManagement.js";
 
 export async function loadHome(){
 
@@ -185,6 +185,7 @@ async function roomJoinHandler(){
         //Link the sockets to handle socket emits
         linkSockets();
         setCurScreen("lobby");
+        document.querySelector('#closeRoomButton').addEventListener(guestExitRoomHandler);
     },520);
 
 }
@@ -229,4 +230,8 @@ async function closeGameHandler(){
 
     closeRoom();
 
+}
+
+async function guestExitRoomHandler(){
+    exitRoom();
 }

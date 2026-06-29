@@ -76,6 +76,19 @@ export async function closeRoom(){
 
 }
 
+export function exitRoom(){
+
+    socket.on("error",data=>{
+        new Toast("1",data.message,1,document.body);
+    });
+
+    socket.emit("exit_room",{
+        room_id: ROOM_ID,
+        player_index: PLAYER_INDEX
+    })
+
+}
+
 export function makeGameScreen(secret){
     buildGameScreen();
     scoreContainer = document.querySelector('.im_game_score_value');
