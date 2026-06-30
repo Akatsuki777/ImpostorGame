@@ -9,6 +9,7 @@ import type { AddToastProps } from './features/toast/ToastTypes.tsx'
 import ShapesHeader from './components/ui/ShapesHeader.tsx'
 import ImpostorTitleImg from './components/ui/ImpostorEl.tsx'
 import StylizedType from './components/ui/StylizedType.tsx'
+import GameCard from './components/ui/GameCard.tsx'
 
 const toastProps: AddToastProps  = {
   toastType: 'success',
@@ -37,10 +38,8 @@ createRoot(document.getElementById('root')!).render(
     <ToastProvider>
       <SampleToastButton />
       <Input className="m-4" placeholder="******" inputType="password"></Input>
-      <div className={`w-110 aspect-880/1200`}>
-        <StylizedType
-          children='Impostor'
-        ></StylizedType>
+      <div className={`w-150 aspect-880/1200`}>
+        <GameCard></GameCard>
       </div>
       <App />
     </ToastProvider>
