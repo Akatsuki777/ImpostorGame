@@ -4,6 +4,7 @@ type ButtonProps = {
     textColor?: string
     onClick?: () => void
     children?: React.ReactNode
+    noClick?: Boolean
 }
 
 function Button({
@@ -11,7 +12,8 @@ function Button({
     textColor = 'text-black',
     className = '',
     onClick = () => {},
-    children = 'Click me'
+    children = 'Click me',
+    noClick=false
 }: ButtonProps) {
 
     return (
@@ -22,8 +24,8 @@ function Button({
                 <p className={`select-none`}>{children}</p>
             </div>
             <div
-                className={`relative left-0 -top-12.5 w-59 h-12.5 rounded-full bg-black opacity-0 transition-opacity duration-300 hover:opacity-20 active:opacity-30`}
-                onClick={onClick}
+                className={`relative left-0 -top-12.5 w-59 h-12.5 rounded-full bg-black opacity-0 transition-opacity duration-300 ${noClick?'':'hover:opacity-20 active:opacity-30'}`}
+                onClick={noClick?()=>{}:onClick}
             ></div>
         </div>
     )

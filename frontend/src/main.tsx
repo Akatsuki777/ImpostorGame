@@ -10,6 +10,7 @@ import ShapesHeader from './components/ui/ShapesHeader.tsx'
 import ImpostorTitleImg from './components/ui/ImpostorEl.tsx'
 import StylizedType from './components/ui/StylizedType.tsx'
 import GameCard from './components/ui/GameCard.tsx'
+import RoomContainer from './components/ui/RoomContainer.tsx'
 
 const toastProps: AddToastProps  = {
   toastType: 'success',
@@ -40,6 +41,7 @@ createRoot(document.getElementById('root')!).render(
       <Input className="m-4" placeholder="******" inputType="password"></Input>
       <div className={`w-150 aspect-880/1200`}>
         <GameCard></GameCard>
+        <RoomContainer isRoomOwner={true} roomID='ABCDEF'></RoomContainer>
       </div>
       <App />
     </ToastProvider>
