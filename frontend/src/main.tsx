@@ -10,6 +10,8 @@ import GameCard from './components/ui/GameCard.tsx'
 import RoomContainer from './components/ui/RoomContainer.tsx'
 import type { RoomMemberProps } from './components/ui/RoomMembersContainer.tsx'
 import RoomMembersContainer from './components/ui/RoomMembersContainer.tsx'
+import { useModal } from './features/modal/ModalContext.tsx'
+import ModalProvider from './features/modal/ModalContext.tsx'
 
 const toastProps: AddToastProps  = {
   toastType: 'success',
@@ -41,7 +43,7 @@ const roomMembers: RoomMemberProps[] = [
 ]
 
 function SampleToastButton() {
-  const toast = useToast();
+  const modal = useModal();
 
   return (
     <Button
@@ -50,7 +52,10 @@ function SampleToastButton() {
       backgroundColor="bg-red-400"
       textColor="text-white"
       onClick={() => {
-        toast?.addToast(toastProps);
+        modal?.addModal({modalContent:<>
+          <Button></Button>
+          <div className={`h-100`}></div>
+        </>});
       }}
     />
   );
@@ -58,17 +63,20 @@ function SampleToastButton() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ToastProvider>
-      <SampleToastButton />
-      <Input className="m-4" placeholder="******" inputType="password"></Input>
-      <div className={`w-150 aspect-880/1200`}>
-        <GameCard></GameCard>
-        <RoomContainer isRoomOwner={true} roomID='ABCDEF'></RoomContainer>
-      </div>
-      <RoomMembersContainer
-        users={roomMembers}
-      ></RoomMembersContainer>
-      <App />
-    </ToastProvider>
+    <ModalProvider>
+      <ToastProvider>
+        <SampleToastButton />
+        <Input className="m-4" placeholder="******" inputType="password"></Input>
+        <div className={`w-150 aspect-880/1200`}>
+          <GameCard></GameCard>
+          <RoomContainer isRoomOwner={true} roomID='ABCDEF'></RoomContainer>
+        </div>
+        <RoomMembersContainer
+          users={roomMembers}
+        ></RoomMembersContainer>
+        <App />
+
+      </ToastProvider>
+    </ModalProvider>
   </StrictMode>,
 )
