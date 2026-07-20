@@ -46,11 +46,11 @@ export default function ToastProvider({children}:{children: React.ReactNode}){
 
     return (
         <ToastContext.Provider value={{addToast, removeToast, clearToasts}}>
-            <ToastContainer
+            {toasts.length>0 && <ToastContainer
                 toastItems={toasts}
                 onRemove={removeToast}
             >
-            </ToastContainer>
+            </ToastContainer>}
             {children}
         </ToastContext.Provider>
     )
