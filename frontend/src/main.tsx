@@ -6,17 +6,39 @@ import App from './App.tsx'
 import Input from './components/ui/Input.tsx'
 import ToastProvider, { useToast } from './features/toast/ToastContext.tsx'
 import type { AddToastProps } from './features/toast/ToastTypes.tsx'
-import ShapesHeader from './components/ui/ShapesHeader.tsx'
-import ImpostorTitleImg from './components/ui/ImpostorEl.tsx'
-import StylizedType from './components/ui/StylizedType.tsx'
 import GameCard from './components/ui/GameCard.tsx'
 import RoomContainer from './components/ui/RoomContainer.tsx'
+import type { RoomMemberProps } from './components/ui/RoomMembersContainer.tsx'
+import RoomMembersContainer from './components/ui/RoomMembersContainer.tsx'
 
 const toastProps: AddToastProps  = {
   toastType: 'success',
   message: "Sample Message",
   expirationTime: 2
 }
+
+const roomMembers: RoomMemberProps[] = [
+  {
+    id:"ABCD",
+    username:"AJU_JOY",
+    color:"bg-purple-500"
+  },
+  {
+    id:"ABCE",
+    username:"CHARITHA",
+    color:"bg-green-500"
+  },
+  {
+    id:"ABCF",
+    username:"MAMU",
+    color:"bg-red-500"
+  },
+  {
+    id:"ABCZ",
+    username:"MONU",
+    color:"bg-amber-500"
+  }  
+]
 
 function SampleToastButton() {
   const toast = useToast();
@@ -43,6 +65,9 @@ createRoot(document.getElementById('root')!).render(
         <GameCard></GameCard>
         <RoomContainer isRoomOwner={true} roomID='ABCDEF'></RoomContainer>
       </div>
+      <RoomMembersContainer
+        users={roomMembers}
+      ></RoomMembersContainer>
       <App />
     </ToastProvider>
   </StrictMode>,

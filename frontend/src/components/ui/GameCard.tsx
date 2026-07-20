@@ -17,9 +17,6 @@ export default function GameCard({
     const imgAnimIn = '-rotate-12 -translate-x-full opacity-0';
     const textAnimIn = '-translate-x-full';
 
-    const imgAnimOut = 'translate-3d translate-z-20 opacity-0';
-    const textAnimOut = 'translate-x-full';
-
     useEffect(()=>{
         setIsIncoming(false);
     },[]);
