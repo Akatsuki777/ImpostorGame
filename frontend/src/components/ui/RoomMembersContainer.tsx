@@ -66,7 +66,7 @@ function RoomMemberEl({
 }:RoomMemberElProps){
 
     return (
-        <div className={`transition duration-150 w-full aspect-square rounded-md shadow-[0px_0px_2px_#000] hover:shadow-[0px_0px_4px_#000]`}>
+        <div className={`transition duration-150 w-full aspect-square rounded-md shadow-[0px_0px_2px_#000] hover:shadow-[0px_0px_4px_#000] bg-white`}>
             <img
                 className={`w-2 h-2 hover:bg-gray-200 active:bg-gray-600 transition duration-150 rounded-full mt-[2%] ml-[calc(98%-8px)]`}
                 src={closeBtn}
