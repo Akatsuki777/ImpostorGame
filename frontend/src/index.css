@@ -10,5 +10,11 @@
 
 @theme{
   --font-game: 'Permanent-Marker', sans-serif;
+  --color-game-gray: #636363;
+  --color-game-green: #B1CE21;
+  --color-game-rose: #FA448B;
+  --color-game-purple: #491D88;
+  --color-game-turquoise: #3C947A;
+  --color-game-red: #FA4544;
 }
 
