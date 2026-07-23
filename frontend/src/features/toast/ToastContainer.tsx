@@ -13,7 +13,7 @@ export default function ToastContainer({
     
     return (
         <div
-            className={`w-87.5 max-w-9/12 min-h-6.25 flex flex-col gap-y-3 max-h-37 overflow-hidden fixed top-3 left-1/2 -translate-x-1/2 z-50`}
+            className={`w-87.5 max-w-9/12 min-h-6.25 flex flex-col gap-y-3 max-h-37 overflow-hidden fixed top-3 left-1/2 -translate-x-1/2 z-1000`}
         >
             {
                toastItems.map((toast)=>(
