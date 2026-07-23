@@ -27,12 +27,17 @@ export default function ModalProvider({children}:{children:React.ReactNode}){
         setIsModalPresent(false);
     },[]);
 
+    const closeModal = useCallback(()=>{
+        modalContent.onClose?.();
+        removeModal();
+    },[modalContent, removeModal]);
+
     return (
         <ModalContext.Provider value={{addModal,removeModal}}>
             {
                 isModalPresent && <Modal
                     modalContent={modalContent.modalContent}
-                    onClose={removeModal}
+                    onClose={closeModal}
                 >
 
                 </Modal>
