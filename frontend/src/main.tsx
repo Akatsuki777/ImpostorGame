@@ -13,6 +13,7 @@ import { useModal } from './features/modal/ModalContext.tsx'
 import ModalProvider from './features/modal/ModalContext.tsx'
 import type { Player } from './types/global.tsx'
 import Poll from './components/ui/Poll.tsx'
+import SubmitGuess from './components/ui/SubmitGuess.tsx'
 
 const players:Player[] = [
   {
@@ -106,6 +107,7 @@ createRoot(document.getElementById('root')!).render(
         <RoomMembersContainer
           users={roomMembers}
         ></RoomMembersContainer>
+        <SubmitGuess></SubmitGuess>
         <App />
 
       </ToastProvider>
