@@ -34,14 +34,14 @@ export default function Poll({
                         playerIndex={player.playerIndex}
                         playerColor={player.playerColor}
                         playerName={player.playerName}
-                        className = {player.playerIndex==activeIndex?'border-blue-500 shadow-[0px_0px_7px_rgba(0,180,216,0.8)]':'border-[#D5D5D5]'}
+                        className = {player.playerIndex==activeIndex?'border-blue-500 shadow-[0px_0px_7px_rgba(0,180,216,0.8)]':'border-game-border-gray'}
                         onClick={()=>{
                             setActiveIndex(player.playerIndex);
                         }}
                     ></PlayerCards>
                 )
             }
-            <Button className={`my-2.5 mx-auto text-2xl border-[#D5D5D5]`} backgroundColor="bg-[#B1CE21]" textColor="text-white" onClick={()=>{pollDoneClick(activeIndex)}}>SUBMIT VOTE</Button>
+            <Button className={`my-2.5 mx-auto text-2xl border-game-border-gray`} backgroundColor="bg-game-green" textColor="text-white" onClick={()=>{pollDoneClick(activeIndex)}}>SUBMIT VOTE</Button>
         </div>
     );
 
@@ -58,7 +58,7 @@ export function PlayerCards(
     return (
         <div onClick={onClick} className={`transition bg-[#F3F3F3] duration-300 cursor-pointer flex items-center justify-between w-75 h-18 mx-auto rounded-full border  ${className} my-1.5`}>
             <div className={`h-16.25 aspect-square rounded-full ${playerColor} ml-[4.5px]`}></div>
-            <p className={`w-58.75 text-xl text-center text-[#636363]`}>{playerName}</p>
+            <p className={`w-58.75 text-xl text-center text-game-gray`}>{playerName}</p>
         </div>
     );
 }
