@@ -1,5 +1,6 @@
 export type Player = {
-    playerIndex: Number,
-    playerName: String,
-    playerColor: String
+    playerIndex?: number,
+    playerName: string,
+    playerColor: string,
+    playerScore?: number
 }
