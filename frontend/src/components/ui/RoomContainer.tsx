@@ -16,7 +16,7 @@ export default function RoomContainer({
     return (
         <div className={`${className} w-68.75 h-32.5 rounded-3xl flex flex-col items-center justify-center border bg-white border-black`}>
             <p className={' mb-5 text-2xl text-black'}>ROOM ID</p>
-            {!isRoomOwner?<Input></Input>:<Button children={roomID} backgroundColor='bg-[#FA448C]' textColor="text-white" noClick={true}></Button>}
+            {!isRoomOwner?<Input placeholder="ENTER ROOM ID"></Input>:<Button children={roomID} backgroundColor='bg-game-rose' textColor="text-white" noClick={true}></Button>}
         </div>
     );
 

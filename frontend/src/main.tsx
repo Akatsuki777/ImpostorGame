@@ -14,22 +14,31 @@ import ModalProvider from './features/modal/ModalContext.tsx'
 import type { Player } from './types/global.tsx'
 import Poll from './components/ui/Poll.tsx'
 import SubmitGuess from './components/ui/SubmitGuess.tsx'
+import ScoreContainer, { type ScoreCardProps } from './components/ui/ScoreContainer.tsx'
 
 const players:Player[] = [
   {
     playerIndex: 123,
     playerName: 'AJU_JOY',
-    playerColor: 'bg-blue-500'
+    playerColor: 'bg-blue-500',
+    playerScore: 12
   },{
     playerIndex: 124,
     playerName: 'CHARITHA',
-    playerColor: 'bg-green-500'
+    playerColor: 'bg-green-500',
+    playerScore: 20
   },{
     playerIndex: 125,
     playerName: 'PUTTU',
-    playerColor: 'bg-red-500'
+    playerColor: 'bg-red-500',
+    playerScore: 15
   }
 ];
+
+const scoreCardProps:ScoreCardProps[] = players.map(item=>({
+  ...item,
+  isHighest: false
+}));
 
 const roomMembers: RoomMemberProps[] = [
   {
@@ -102,12 +111,16 @@ createRoot(document.getElementById('root')!).render(
         <Input className="m-4" placeholder="******" inputType="password"></Input>
         <div className={`w-150 aspect-880/1200`}>
           <GameCard></GameCard>
-          <RoomContainer isRoomOwner={true} roomID='ABCDEF'></RoomContainer>
+          <RoomContainer isRoomOwner={false} roomID='ABCDEF'></RoomContainer>
         </div>
         <RoomMembersContainer
           users={roomMembers}
         ></RoomMembersContainer>
         <SubmitGuess></SubmitGuess>
+        <ScoreContainer
+          players={scoreCardProps}
+          onClick={()=>{}}
+        ></ScoreContainer>
         <App />
 
       </ToastProvider>
