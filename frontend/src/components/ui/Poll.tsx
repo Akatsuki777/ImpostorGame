@@ -30,13 +30,13 @@ export default function Poll({
             {
                 players.map((player)=>
                     <PlayerCards
-                        key={player.playerIndex.toString()}
+                        key={player.playerIndex?.toString()}
                         playerIndex={player.playerIndex}
                         playerColor={player.playerColor}
                         playerName={player.playerName}
                         className = {player.playerIndex==activeIndex?'border-blue-500 shadow-[0px_0px_7px_rgba(0,180,216,0.8)]':'border-game-border-gray'}
                         onClick={()=>{
-                            setActiveIndex(player.playerIndex);
+                            setActiveIndex(player.playerIndex?player.playerIndex:-1);
                         }}
                     ></PlayerCards>
                 )
