@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import Button from './components/ui/Button.tsx'
@@ -15,6 +15,7 @@ import type { Player } from './types/global.tsx'
 import Poll from './components/ui/Poll.tsx'
 import SubmitGuess from './components/ui/SubmitGuess.tsx'
 import ScoreContainer, { type ScoreCardProps } from './components/ui/ScoreContainer.tsx'
+import ScoreElement from './components/ui/ScoreElement.tsx'
 
 const players:Player[] = [
   {
@@ -103,6 +104,28 @@ function SampleToastButton() {
   );
 }
 
+function IncrementingScore(){
+
+  const scoreRef = useRef<HTMLParagraphElement>(null);
+  let curScore = 0;
+
+  useEffect(()=>{
+    setInterval(()=>{
+      curScore++;
+      if(scoreRef.current){
+        
+      }
+    },500);
+  },[])
+
+  return (
+    <ScoreElement
+      ref={scoreRef}
+    ></ScoreElement>
+  );
+
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ModalProvider>
@@ -121,8 +144,7 @@ createRoot(document.getElementById('root')!).render(
           players={scoreCardProps}
           onClick={()=>{}}
         ></ScoreContainer>
-        <App />
-
+        <IncrementingScore></IncrementingScore>
       </ToastProvider>
     </ModalProvider>
   </StrictMode>,
