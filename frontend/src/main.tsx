@@ -16,6 +16,7 @@ import Poll from './components/ui/Poll.tsx'
 import SubmitGuess from './components/ui/SubmitGuess.tsx'
 import ScoreContainer, { type ScoreCardProps } from './components/ui/ScoreContainer.tsx'
 import ScoreElement from './components/ui/ScoreElement.tsx'
+import MessageButton from './components/ui/MessageButton.tsx'
 
 const players:Player[] = [
   {
@@ -145,6 +146,7 @@ createRoot(document.getElementById('root')!).render(
           onClick={()=>{}}
         ></ScoreContainer>
         <IncrementingScore></IncrementingScore>
+        <MessageButton></MessageButton>
       </ToastProvider>
     </ModalProvider>
   </StrictMode>,
