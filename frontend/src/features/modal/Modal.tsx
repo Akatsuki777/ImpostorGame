@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import closeBtn from '../../assets/cross_button.svg'
+import { motion } from 'motion/react';
 export type ModalProps = {
     modalContent?: React.ReactElement,
     onClose?: () => void
@@ -37,7 +38,16 @@ export default function Modal({
 
 
     return(
-        <div ref={modalRef} className={`transition-opacity duration-150 ease-in w-11/12 min-h-50 h-fit rounded-md border absolute bg-white left-[4.16%] top-2 ${isRemove?'opacity-0':''} z-100`}>
+        <motion.div 
+            initial={{scale: 0, opacity: 0}} 
+            exit={{scale: 0, opacity: 0}}
+            animate={{scale: 1, opacity: 1}}
+            transition={{
+                duration: 0.2,
+                scale: {type: "spring", visualDuration: 0.2, bounce: 0.3}
+            }}
+            
+            ref={modalRef} className={`w-11/12 min-h-50 h-fit rounded-md border absolute bg-white left-[4.16%] top-2 ${isRemove?'opacity-0':''} z-100`}>
             <img
                 className={`w-2 h-2 hover:bg-gray-200 active:bg-gray-600 transition duration-150 rounded-full mt-[2%] ml-[calc(98%-8px)]`}
                 src={closeBtn}
@@ -45,7 +55,7 @@ export default function Modal({
                 onClick={() => closeModal()}
             ></img>
             {modalContent}
-        </div>
+        </motion.div>
     );
 
 }

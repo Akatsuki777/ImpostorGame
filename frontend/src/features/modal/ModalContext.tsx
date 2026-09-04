@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import type { ModalProps } from "./Modal"
 import Modal from "./Modal";
+import { AnimatePresence } from "motion/react";
 
 export type ModalContextType = {
     addModal: (modalProps:ModalProps)=> void;
@@ -34,14 +35,16 @@ export default function ModalProvider({children}:{children:React.ReactNode}){
 
     return (
         <ModalContext.Provider value={{addModal,removeModal}}>
-            {
-                isModalPresent && <Modal
-                    modalContent={modalContent.modalContent}
-                    onClose={closeModal}
-                >
+            <AnimatePresence>
+                {
+                    isModalPresent && <Modal
+                        modalContent={modalContent.modalContent}
+                        onClose={closeModal}
+                    >
 
-                </Modal>
-            }
+                    </Modal>
+                }
+            </AnimatePresence>
             {children}
         </ModalContext.Provider>
     );
