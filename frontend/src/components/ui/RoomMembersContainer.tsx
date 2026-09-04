@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import closeBtn from "../../assets/cross_button.svg";
+import {motion, AnimatePresence} from "motion/react"
 
 export type RoomMemberProps = {
     id: string,
@@ -9,7 +10,7 @@ export type RoomMemberProps = {
 
 export type RoomMemberContainerProps = {
     users?: RoomMemberProps[],
-    onUserRemove?:()=>void
+    onUserRemove?:(memberId:string)=>void
 }
 
 type RoomMemberElProps = RoomMemberProps & {
@@ -31,27 +32,30 @@ export default function RoomMembersContainer({
     const [roomMembers, setRoomMembers] = useState(users);
 
     function onRemove(memberId:string){
-        setRoomMembers((prev)=>
-            prev.filter((member)=>member.id!==memberId)
-        );
-        onUserRemove?.();
+        onUserRemove?.(memberId);
     }
+
+    useEffect(()=>{
+        setRoomMembers(users);
+    }, [users])
 
     return (
         <div className={`w-11/12 aspect-square border-t border-b overflow-hidden`}>
             <div className={`w-full h-full overflow-scroll grid grid-cols-[repeat(3,1fr)] auto-rows-min gap-4 p-2.5 place-items-center`}>
-               {
-                roomMembers.map((member)=>
-                    <RoomMemberEl
-                        key={member.id}
-                        id={member.id}
-                        color={member.color}
-                        username={member.username}
-                        onRemove={onRemove}
-                    >
-                    </RoomMemberEl>
-                )
-               }
+               <AnimatePresence>
+                    {
+                        roomMembers.map((member)=>
+                                <RoomMemberEl
+                                    key={member.id}
+                                    id={member.id}
+                                    color={member.color}
+                                    username={member.username}
+                                    onRemove={onRemove}
+                                >
+                                </RoomMemberEl>
+                        )
+                    }
+               </AnimatePresence>
             </div>
         </div>
     );
@@ -66,7 +70,16 @@ function RoomMemberEl({
 }:RoomMemberElProps){
 
     return (
-        <div className={`transition duration-150 w-full aspect-square rounded-md shadow-[0px_0px_2px_#000] hover:shadow-[0px_0px_4px_#000] bg-white`}>
+        <motion.div 
+            layout
+            initial={{scale: 0, opacity: 0}} 
+            animate={{scale: 1, opacity: 1}} 
+            exit={{scale: 0, opacity: 0}}
+            transition={{
+                duration: 0.2,
+                scale: {type: "spring", visualDuration: 0.2, bounce: 0.2}
+            }}
+            className={`transition-shadow duration-150 w-full aspect-square rounded-md shadow-[0px_0px_2px_#000] hover:shadow-[0px_0px_4px_#000] bg-white`}>
             <img
                 className={`w-2 h-2 hover:bg-gray-200 active:bg-gray-600 transition duration-150 rounded-full mt-[2%] ml-[calc(98%-8px)]`}
                 src={closeBtn}
@@ -79,7 +92,7 @@ function RoomMemberEl({
             <p className={`w-10/12 wrap-break-word text-center mx-auto mt-0.5`}>
                 {username}
             </p>
-        </div>
+        </motion.div>
     );
 
 }
