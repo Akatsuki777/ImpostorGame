@@ -85,8 +85,7 @@ export interface ServerToClientEvents {
 
 //Declare the socket
 
-const socketUrl = import.meta.env.VITE_SOCKET_URL
-    ?? (import.meta.env.VITE_SOCKET_SMOKE_TEST === 'true' ? 'http://localhost:5051' : import.meta.env.BASE_URL);
+const socketUrl = import.meta.env.API_BASE_URL;
 
 export const socket:Socket<ServerToClientEvents, ClientToServerEvents> = io(socketUrl,{
     autoConnect: false,
