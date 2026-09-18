@@ -1,4 +1,4 @@
-import { createContext, useCallback, useReducer } from "react"
+import { createContext, useCallback, useContext, useReducer } from "react"
 import type { Player } from "../types/global"
 import { useSocketEvent } from "../api/sockets/useSocketEvent"
 import { deepMerge } from "../helpers/utils"
@@ -53,5 +53,17 @@ export default function GameStateProvider({children}:{children:React.ReactNode})
             {children}
         </GameStateContext.Provider>
     );
+
+}
+
+export function useGameState(){
+
+    const gameState = useContext(GameStateContext);
+
+    if(!gameState){
+        console.error("Must be used within the Game State Context");
+    }
+
+    return gameState;
 
 }
