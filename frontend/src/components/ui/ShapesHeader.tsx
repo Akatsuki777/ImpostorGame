@@ -1,10 +1,13 @@
+import {motion} from "motion/react"
+
 export default function ShapesHeader() {
 
     const svgStyle = 'col-start-1 row-start-1 drop-shadow-[4px_4px_0px_#EBEBEB]';
 
     return (
-        <div className={`w-full h-full flex justify-between`}>
-            <div className={`my-4 w-20 h-20 -rotate-15`}>
+        <div className={`w-full h-fit flex justify-between`}>
+            <div 
+                className={`my-4 w-20 h-20 -rotate-15`}>
                 <svg
                     className={`${svgStyle}`}
                     fill="#FA448C"
