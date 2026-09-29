@@ -28,7 +28,7 @@ export default function Button({
             className={`group relative mx-auto flex shrink-0 items-center justify-center
                 ${buttonWidth} max-w-59 h-12.5 overflow-hidden rounded-full
                 border-[0.45px] border-black p-0 ${backgroundColor} ${textColor}
-                cursor-pointer disabled:cursor-not-allowed disabled:opacity-50
+                cursor-pointer disabled:cursor-not-allowed 
                 focus-visible:outline-2 focus-visible:outline-offset-2
                 focus-visible:outline-current ${className}`}
         >
