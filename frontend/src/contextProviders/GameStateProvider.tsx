@@ -6,9 +6,11 @@ import { deepMerge } from "../helpers/utils"
 export type GameStateType = {
     gameLayout: 'unjoined' | 'lobby' | 'ingame',
     gamePhase: 'playing' | 'votingConsent' | 'voting' | 'roundResult' | 'gameResult' | 'idle',
+    isRoomOwner: boolean,
     playerVoted: boolean,
     secret: string | null,
-    players: Player[]
+    players: Player[],
+    roomId: string | null
 }
 
 export type GameActionType = {
@@ -19,9 +21,11 @@ export type GameActionType = {
 const initialState: GameStateType = {
     gameLayout: 'unjoined',
     gamePhase: 'idle',
+    isRoomOwner: false,
     playerVoted: false,
     secret: null,
-    players: []
+    players: [],
+    roomId: null
 }
 
 const GameStateContext = createContext<GameStateType | null>(initialState);
