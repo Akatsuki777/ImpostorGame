@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import closeBtn from "../../assets/cross_button.svg";
 import {motion, AnimatePresence} from "motion/react"
+import type { Player } from "../../types/global";
 
 export type RoomMemberProps = {
-    id: string,
+    isCloseable: boolean,
+    id: string | undefined,
     username: string,
     color: string
 }
 
 export type RoomMemberContainerProps = {
-    users?: RoomMemberProps[],
+    isOwnerView?: boolean,
+    users?: Player[],
     onUserRemove?:(memberId:string)=>void
 }
 
@@ -18,11 +21,12 @@ type RoomMemberElProps = RoomMemberProps & {
 }
 
 export default function RoomMembersContainer({ 
+    isOwnerView=false,
     users = [],
     onUserRemove
 }:RoomMemberContainerProps){
 
-    const ids = users.map((user)=>user.id);
+    const ids = users.map((user)=>user.playerIndex);
     const uniqueIds = new Set(ids);
 
     if(ids.length !== uniqueIds.size){
@@ -46,10 +50,11 @@ export default function RoomMembersContainer({
                     {
                         roomMembers.map((member)=>
                                 <RoomMemberEl
-                                    key={member.id}
-                                    id={member.id}
-                                    color={member.color}
-                                    username={member.username}
+                                    isCloseable={isOwnerView}
+                                    key={member.playerID}
+                                    id={member.playerID}
+                                    color={member.playerColor}
+                                    username={member.playerName}
                                     onRemove={onRemove}
                                 >
                                 </RoomMemberEl>
@@ -63,6 +68,7 @@ export default function RoomMembersContainer({
 }
 
 function RoomMemberEl({
+    isCloseable=false,
     id="",
     username="",
     color="bg-white",
@@ -80,12 +86,14 @@ function RoomMemberEl({
                 scale: {type: "spring", visualDuration: 0.2, bounce: 0.2}
             }}
             className={`transition-shadow duration-150 w-full aspect-square rounded-md shadow-[0px_0px_2px_#000] hover:shadow-[0px_0px_4px_#000] bg-white`}>
-            <img
-                className={`w-2 h-2 hover:bg-gray-200 active:bg-gray-600 transition duration-150 rounded-full mt-[2%] ml-[calc(98%-8px)]`}
-                src={closeBtn}
-                alt="Close Button"
-                onClick={() => onRemove(id)}
-            ></img>
+            {
+                isCloseable && <img
+                    className={`w-2 h-2 hover:bg-gray-200 active:bg-gray-600 transition duration-150 rounded-full mt-[2%] ml-[calc(98%-8px)]`}
+                    src={closeBtn}
+                    alt="Close Button"
+                    onClick={() => onRemove(id)}
+                ></img>
+            }
             <div
                 className={`w-2/3 aspect-square rounded-full ${color} mx-auto`}
             ></div>
