@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import * as authApi from '../api/auth/authAPI';
 import { useToast } from "../features/toast/ToastContext";
 
@@ -18,53 +18,7 @@ export function AuthStateProvider({children}:{children:React.ReactNode}){
     const toast = useToast();
 
     const [user,setUser] = useState<string|null>(null);
-    const [isLoading,setLoading] = useState<boolean>(false);
-
-    const login = useCallback(async (username: string, password: string)=>{
-        
-        setLoading(true);
-
-        try{
-            await authApi.login(username,password);
-            toast?.addToast({
-                toastType: 'success',
-                message: 'Successfully logged in',
-                expirationTime: 2
-            })
-        } catch (error){
-            toast?.addToast({
-                toastType: 'error',
-                message: error instanceof Error ? error.message : "Unable to login",
-                expirationTime: 2,
-            });
-        }
-
-        setLoading(false);
-
-    },[toast]);
-
-    const register = useCallback(async (username: string, password: string)=>{
-
-        setLoading(true);
-
-        try{
-            await authApi.register(username,password);
-            toast?.addToast({
-                toastType: 'success',
-                message: "Successfully Registered!",
-                expirationTime: 2
-            })
-        } catch (error){
-           toast?.addToast({
-                toastType: 'error',
-                message: error instanceof Error ? error.message : "Unable to register",
-                expirationTime: 2,
-            }); 
-        }
-
-        setLoading(false);
-
-    },[toast]);
+    const [isLoading,setLoading] = useState<boolean>(true);
 
     const me = useCallback(async ()=>{
 
@@ -92,6 +46,58 @@ export function AuthStateProvider({children}:{children:React.ReactNode}){
     },[toast]);
 
 
+    const login = useCallback(async (username: string, password: string)=>{
+        
+        setLoading(true);
+
+        let isLoggedIn = false;
+
+        try{
+            await authApi.login(username,password);
+            toast?.addToast({
+                toastType: 'success',
+                message: 'Successfully logged in',
+                expirationTime: 2
+            })
+            isLoggedIn = true;
+        } catch (error){
+            toast?.addToast({
+                toastType: 'error',
+                message: error instanceof Error ? error.message : "Unable to login",
+                expirationTime: 2,
+            });
+        }
+        if(isLoggedIn){
+            await me();
+        }
+
+        setLoading(false);
+
+    },[toast, me]);
+
+    const register = useCallback(async (username: string, password: string)=>{
+
+        setLoading(true);
+
+        try{
+            await authApi.register(username,password);
+            toast?.addToast({
+                toastType: 'success',
+                message: "Successfully Registered!",
+                expirationTime: 2
+            })
+        } catch (error){
+           toast?.addToast({
+                toastType: 'error',
+                message: error instanceof Error ? error.message : "Unable to register",
+                expirationTime: 2,
+            }); 
+        }
+
+        setLoading(false);
+
+    },[toast]);
+
     const logout = useCallback(async ()=>{
 
         setLoading(true);
@@ -103,6 +109,7 @@ export function AuthStateProvider({children}:{children:React.ReactNode}){
                 message: 'Successfully logged out!',
                 expirationTime: 2
             });
+            setUser(null);
         } catch (error){
             toast?.addToast({
                 toastType: 'error',
@@ -113,7 +120,29 @@ export function AuthStateProvider({children}:{children:React.ReactNode}){
 
         setLoading(false);
 
-    },[toast])
+    },[toast]);
+
+    useEffect(()=>{
+        let cancelled = false;
+
+        async function restoreSession(){
+            try{
+                const username = await authApi.me();
+                if (!cancelled) setUser(username);
+            } catch {
+                if(!cancelled) setUser(null);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        }
+
+        void restoreSession();
+
+        return ()=>{
+            cancelled = true;
+        };
+
+    },[]);
 
     return (
         <AuthStateContext.Provider value={{user,isLoading,login,register,logout,me}}>
