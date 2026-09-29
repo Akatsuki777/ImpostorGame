@@ -55,7 +55,7 @@ export default function RoomMembersContainer({
                                     id={member.playerID}
                                     color={member.playerColor}
                                     username={member.playerName}
-                                    onRemove={onRemove}
+                                    onRemove={isOwnerView?onRemove:()=>{}}
                                 >
                                 </RoomMemberEl>
                         )
